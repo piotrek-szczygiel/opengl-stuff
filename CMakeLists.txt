@@ -17,6 +17,9 @@ file(GLOB IMGUI_SRC
 add_executable(main
   src/main.cpp
 
+  src/app.cpp
+  src/app.h
+
   ${IMGUI_SRC}
 )
 
