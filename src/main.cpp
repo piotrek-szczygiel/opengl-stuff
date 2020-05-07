@@ -1,7 +1,7 @@
-#include <stdio.h>
-
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+
+#include <fmt/format.h>
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
@@ -9,30 +9,38 @@
 #include "app.h"
 
 static void glfw_error_callback(int error, const char* description) {
-    fprintf(stderr, "GLFW Error %d: %s\n", error, description);
+    fmt::print(stderr, "GLFW Error {}: {}\n", error, description);
+}
+
+static void glfw_key_callback(GLFWwindow* w, int key, int scancode, int action, int mods) {
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+        glfwSetWindowShouldClose(w, true);
+    }
 }
 
 int main(int, char**) {
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit()) {
-        fprintf(stderr, "Failed to initialize GLFW!\n");
+        fmt::print(stderr, "Failed to initialize GLFW!\n");
         return 1;
     }
 
     auto window = glfwCreateWindow(800, 600, "OpenGL Stuff", NULL, NULL);
     if (window == NULL) {
-        fprintf(stderr, "Failed to create window!\n");
+        fmt::print(stderr, "Failed to create window!\n");
         return 1;
     }
+
+    glfwSetKeyCallback(window, glfw_key_callback);
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1);  // Enable vsync
 
     if (glewInit() != GLEW_OK) {
-        fprintf(stderr, "Failed to initialize OpenGL loader!\n");
+        fmt::print(stderr, "Failed to initialize OpenGL loader!\n");
         return 1;
     }
 
-    fprintf(stderr, "Using OpenGL %s\n", glGetString(GL_VERSION));
+    fmt::print(stderr, "Using OpenGL {}\n", glGetString(GL_VERSION));
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -41,7 +49,6 @@ int main(int, char**) {
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-    // io.ConfigViewportsNoAutoMerge = true;
     io.ConfigViewportsNoTaskBarIcon = true;
 
     ImGui::StyleColorsDark();
@@ -56,7 +63,7 @@ int main(int, char**) {
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330 core");
 
-    io.Fonts->AddFontFromFileTTF("roboto.ttf", 14.0f);
+    io.Fonts->AddFontFromFileTTF("res/roboto.ttf", 14.0f);
 
     App app = {};
     app.init();
@@ -100,5 +107,6 @@ int main(int, char**) {
     glfwDestroyWindow(window);
     glfwTerminate();
 
+    fmt::print(stderr, "Application exited successfully.");
     return 0;
 }

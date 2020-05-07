@@ -1,5 +1,6 @@
 #include "app.h"
 #include <GL/glew.h>
+#include <fmt/format.h>
 #include <imgui.h>
 #include <stdint.h>
 #include <string>
@@ -19,7 +20,7 @@ static uint32_t compile_shader(uint32_t type, const std::string& source) {
         glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
         auto message = (char*)alloca(length);
         glGetShaderInfoLog(id, length, &length, message);
-        fprintf(stderr, "Failed to compile %s shader: %s\n", type == GL_VERTEX_SHADER ? "vertex" : "fragment", message);
+        fmt::print(stderr, "Failed to compile {} shader: {}\n", type == GL_VERTEX_SHADER ? "vertex" : "fragment", message);
         glDeleteShader(id);
         return 0;
     }
@@ -85,4 +86,6 @@ void App::deinit() {
 
 void App::frame() {
     glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    ImGui::ShowDemoWindow();
 }

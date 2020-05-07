@@ -5,6 +5,7 @@ project(opengl-stuff)
 add_subdirectory(deps/glfw EXCLUDE_FROM_ALL)
 add_subdirectory(deps/glew EXCLUDE_FROM_ALL)
 add_subdirectory(deps/glm  EXCLUDE_FROM_ALL)
+add_subdirectory(deps/fmt  EXCLUDE_FROM_ALL)
 
 # imgui source
 file(GLOB IMGUI_SRC
@@ -24,7 +25,7 @@ add_executable(main
 )
 
 set_target_properties(main PROPERTIES
-    CXX_STANDARD 11
+    CXX_STANDARD 17
     CXX_STANDARD_REQUIRED YES
     CXX_EXTENSIONS NO
 )
@@ -46,3 +47,6 @@ target_link_libraries(main PRIVATE libglew_static)
 
 # glm
 target_link_libraries(main PRIVATE glm)
+
+# fmt
+target_link_libraries(main PRIVATE fmt)
